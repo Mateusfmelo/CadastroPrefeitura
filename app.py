@@ -8,7 +8,6 @@ from model.prefeitura import Prefeitura
 from model.endereco import Endereco
 from model.uf import Uf
 
-
 from helpers.database import db, migrate
 from resources.pessoa import Pessoa_Resource, Pessoas_Resource
 from resources.prefeito import Prefeito_Resource, Prefeitos_Resource
@@ -16,7 +15,6 @@ from resources.prefeitura import Prefeitura_Resource, Prefeituras_Resource
 from resources.cidade import Cidade_Resource, Cidades_Resource
 from resources.endereco import Endereco_Resource, Enderecos_Resource
 from resources.uf import Uf_Resource, Ufs_Resource
-
 
 # CORS
 app = Flask(__name__)

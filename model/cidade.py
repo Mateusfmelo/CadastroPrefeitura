@@ -10,7 +10,6 @@ cidade_fields = {
     'uf': fields.Nested(uf_fields)
 }
 
-
 class Cidade(db.Model):
 
     __tablename__ = "tb_cidade"

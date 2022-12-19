@@ -28,7 +28,6 @@ class Pessoa(db.Model):
     
     # Relacionamento com Endereço
     endereco = db.relationship("Endereco", uselist=False)
-    login = db.relationship("Login", uselist=False)
 
     # Herança: Superclasse
     tipo_pessoa = db.Column('tipo_pessoa', String(50))
