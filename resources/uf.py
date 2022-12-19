@@ -2,40 +2,38 @@ from flask_restful import Resource, reqparse, current_app, marshal, marshal_with
 from sqlalchemy import exc
 from helpers.database import db
 from model.error import Error, error_campos
-from model.prefeitura import Prefeitura, prefeitura_fields
+from model.uf import Uf, uf_fields
 
 parser = reqparse.RequestParser()
 parser.add_argument('nome', required=True, location= 'json')
-parser.add_argument('endereco', required=True, location= 'json')
-parser.add_argument('nomePrefeito', required=True, location= 'json')
+parser.add_argument('sigla', required=True, location= 'json')
 
-class Prefeitura_Resource(Resource):
+class Uf_Resource(Resource):
     
-    @marshal_with(prefeitura_fields)
+    @marshal_with(uf_fields)
     def get(self):
-        current_app.logger.info("Get - Endereços")
-        prefeitura = Prefeitura.query\
+        current_app.logger.info("Get - UF")
+        uf = Uf.query\
             .all()
-        return prefeitura, 200
+        return uf, 200
     
     def post(self):
-        current_app.logger.info("Post - Prefeitura")
+        current_app.logger.info("Post - UF")
         try:
             # JSON
             args = parser.parse_args()
             nome = args['nome']
-            nomePrefeito = args['nomePrefeito']
+            sigla = args['sigla']
             
-            # Endereco
+            # UF
             nome = args['nome']
-            endereco = args['endereco']
-            nomePrefeito = args['nomePrefeito']
+            sigla = args['sigla']
 
-            # Prefeitura
-            prefeitura = Prefeitura(nome, endereco, nomePrefeito)
+            # UF
+            uf = Uf(nome, sigla)
             
-            # Criação do Prefeitura.
-            db.session.add(prefeitura)
+            # Criação da UF.
+            db.session.add(uf)
             db.session.commit()
         except exc.SQLAlchemyError as err:
             current_app.logger.error(err)
@@ -45,22 +43,21 @@ class Prefeitura_Resource(Resource):
 
         return 204
     
-class Prefeituras_Resource(Resource):
+class Ufs_Resource(Resource):
     def put(self, id):
-        current_app.logger.info("Put - Prefeitura")
+        current_app.logger.info("Put - UF")
         try:
             # Parser JSON
             args = parser.parse_args()
-            current_app.logger.info("Prefeitura: %s:" % args)
+            current_app.logger.info("UF: %s:" % args)
             
             # Evento
             nome = args['nome']
-            endereco = args['endereco']
-            nomePrefeito = args['nomePrefeito']
+            sigla = args['sigla']
 
-            Prefeitura.query \
+            Uf.query \
                 .filter_by(id = id) \
-                .update(dict(nome = nome, endereco = endereco, nomePrefeito = nomePrefeito))
+                .update(dict(nome = nome, sigla = sigla))
             db.session.commit()
 
         except exc.SQLAlchemyError:
@@ -69,9 +66,9 @@ class Prefeituras_Resource(Resource):
         return 204 
     
     def delete(self, id):
-        current_app.logger.info("Delete - Prefeitura: %s:" % id)
+        current_app.logger.info("Delete - UF: %s:" % id)
         try:
-            Prefeitura.query.filter_by(id=id).delete()
+            Uf.query.filter_by(id=id).delete()
             db.session.commit()
 
         except exc.SQLAlchemyError:

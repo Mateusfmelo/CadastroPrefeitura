@@ -10,18 +10,19 @@ parser.add_argument('numero', required=True, location= 'json')
 parser.add_argument('complemento', required=True, location= 'json')
 parser.add_argument('referencia', required=True, location= 'json')
 parser.add_argument('logradouro', required=True, location= 'json')
+parser.add_argument('cidade', required=True, location= 'json')
 
 class Endereco_Resource(Resource):
     
     @marshal_with(endereco_fields)
     def get(self):
-        current_app.logger.info("Get - Endereços")
+        current_app.logger.info("Get - Endereco")
         endereco = Endereco.query\
             .all()
         return endereco, 200
 
     def post(self):
-        current_app.logger.info("Post - Endereços")
+        current_app.logger.info("Post - Endereco")
         try:
             # JSON
             args = parser.parse_args()
@@ -30,11 +31,12 @@ class Endereco_Resource(Resource):
             complemento = args['complemento']
             referencia = args['referencia']
             logradouro = args['logradouro']
+            cidade = args['cidade']            
 
             # Endereco
-            endereco = Endereco(cep, numero, complemento, referencia, logradouro)
+            endereco = Endereco(cep, numero, complemento, referencia, logradouro, cidade)
             
-            # Criação do Endereco.
+            # Criação de Endereco.
             db.session.add(endereco)
             db.session.commit()
         except exc.SQLAlchemyError as err:
@@ -47,11 +49,11 @@ class Endereco_Resource(Resource):
 
 class Enderecos_Resource(Resource):
     def put(self, id):
-        current_app.logger.info("Put - Endereço")
+        current_app.logger.info("Put - Endereco")
         try:
             # Parser JSON
             args = parser.parse_args()
-            current_app.logger.info("Endereço: %s:" % args)
+            current_app.logger.info("Endereco: %s:" % args)
             
             # Evento
             cep = args['cep']
@@ -59,10 +61,11 @@ class Enderecos_Resource(Resource):
             complemento = args['complemento']
             referencia = args['referencia']
             logradouro = args['logradouro']
+            cidade = args['cidade']         
 
             Endereco.query \
                 .filter_by(id = id) \
-                .update(dict(cep = cep, numero = numero, complemento = complemento, referencia = referencia, logradouro=logradouro))
+                .update(dict(cep = cep, numero = numero, complemento = complemento, referencia = referencia, logradouro = logradouro, cidade = cidade ) )
             db.session.commit()
 
         except exc.SQLAlchemyError:
@@ -71,7 +74,7 @@ class Enderecos_Resource(Resource):
         return 204
 
     def delete(self, id):
-        current_app.logger.info("Delete - Endereço: %s:" % id)
+        current_app.logger.info("Delete - Endereco: %s:" % id)
         try:
             Endereco.query.filter_by(id=id).delete()
             db.session.commit()
