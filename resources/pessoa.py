@@ -2,11 +2,11 @@ from flask_restful import Resource, reqparse, current_app, marshal, marshal_with
 from sqlalchemy import exc
 
 from helpers.database import db
+from model.error import Error, error_campos
 from model.pessoa import Pessoa, pessoa_fields
 from model.endereco import Endereco
 from model.cidade import Cidade
 from model.uf import Uf
-from model.error import Error, error_campos
 
 parser = reqparse.RequestParser()
 parser.add_argument('nome', required=True)
@@ -27,7 +27,7 @@ class Pessoa_Resource(Resource):
         return pessoa, 200
 
     def post(self):
-        current_app.logger.info("Post - Funcionario")
+        current_app.logger.info("Post - Pessoa")
         try:
             # JSON
             args = parser.parse_args()
@@ -104,9 +104,9 @@ class Pessoas_Resource(Resource):
             siglaCidade = cidadeArgs['sigla']
 
             # UF
-            uf = cidade['uf']
-            nomeUf = uf['nome']
-            siglaUf = uf['sigla']
+            ufArgs = cidadeArgs['uf']
+            nomeUf = ufArgs['nome']
+            siglaUf = ufArgs['sigla']
 
             cidade = Cidade(nomeCidade, siglaCidade, Uf(nomeUf, siglaUf))
             endereco = Endereco(cep, numero, complemento,
