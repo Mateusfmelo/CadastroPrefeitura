@@ -21,8 +21,7 @@ class Pessoa(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=False)
     email = db.Column(db.String(80), unique=True)
-    senha = db.Column(db.String(6),
-                      nullable=False)
+    senha = db.Column(db.String(6),nullable=False)
     telefone = db.Column(db.String(11))
     nascimento = db.Column(db.Date)
     
@@ -32,7 +31,6 @@ class Pessoa(db.Model):
     # Herança: Superclasse
     tipo_pessoa = db.Column('tipo_pessoa', String(50))
     __mapper_args__ = {'polymorphic_on': tipo_pessoa}
-
 
     def __init__(self, nome, nascimento, email, senha, telefone, endereco:Endereco):
         self.nome = nome

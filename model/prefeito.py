@@ -1,6 +1,7 @@
 from helpers.database import db
 from flask_restful import fields
 from model.pessoa import Pessoa
+from model.endereco import endereco_fields
 from sqlalchemy import ForeignKey
 
 prefeito_fields = {
@@ -10,13 +11,14 @@ prefeito_fields = {
     'email': fields.String(attribute='email'),
     'senha': fields.String(attribute='senha'),
     'telefone': fields.String(attribute='telefone'),
-    'endereco': fields.String(attribute='endereco')
+    'endereco': fields.Nested(endereco_fields)
 }
 
 class Prefeito(Pessoa, db.Model):
     
     __tablename__ = "tb_prefeito"
-
+    __mapper_args__ = {'polymorphic_identity': 'prefeito'}
+    
     id = db.Column(ForeignKey ("tb_pessoa.id"), primary_key=True)
 
     def __init__(self, nome, nascimento, email, senha, telefone, endereco):

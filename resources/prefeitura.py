@@ -5,15 +5,16 @@ from model.error import Error, error_campos
 from model.prefeitura import Prefeitura, prefeitura_fields
 
 parser = reqparse.RequestParser()
-parser.add_argument('nome', required=True, location= 'json')
-parser.add_argument('endereco', required=True, location= 'json')
-parser.add_argument('nomePrefeito', required=True, location= 'json')
+parser.add_argument('cidade', required=True, location= 'json')
+parser.add_argument('prefeito', required=True, location= 'json')
+parser.add_argument('email', required=True, location= 'json')
+parser.add_argument('telefone', required=True, location= 'json')
 
 class Prefeitura_Resource(Resource):
     
     @marshal_with(prefeitura_fields)
     def get(self):
-        current_app.logger.info("Get - Endereços")
+        current_app.logger.info("Get - Prefeitura")
         prefeitura = Prefeitura.query\
             .all()
         return prefeitura, 200
@@ -23,16 +24,13 @@ class Prefeitura_Resource(Resource):
         try:
             # JSON
             args = parser.parse_args()
-            nome = args['nome']
-            nomePrefeito = args['nomePrefeito']
-            
-            # Endereco
-            nome = args['nome']
-            endereco = args['endereco']
-            nomePrefeito = args['nomePrefeito']
+            cidade = args['cidade']
+            prefeito = args['prefeito']
+            email = args['email']
+            telefone = args['telefone']
 
             # Prefeitura
-            prefeitura = Prefeitura(nome, endereco, nomePrefeito)
+            prefeitura = Prefeitura(cidade, prefeito, email, telefone)
             
             # Criação do Prefeitura.
             db.session.add(prefeitura)
@@ -54,13 +52,14 @@ class Prefeituras_Resource(Resource):
             current_app.logger.info("Prefeitura: %s:" % args)
             
             # Evento
-            nome = args['nome']
-            endereco = args['endereco']
-            nomePrefeito = args['nomePrefeito']
+            cidade = args['cidade']
+            prefeito = args['prefeito']
+            email = args['email']
+            telefone = args['telefone']
 
             Prefeitura.query \
                 .filter_by(id = id) \
-                .update(dict(nome = nome, endereco = endereco, nomePrefeito = nomePrefeito))
+                .update(dict(cidade = cidade, prefeito = prefeito, email = email, telefone = telefone))
             db.session.commit()
 
         except exc.SQLAlchemyError:
